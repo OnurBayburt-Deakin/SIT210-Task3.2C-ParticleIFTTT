@@ -1,6 +1,5 @@
-int light_sensor = A0;
-int light_level;
 int prev_level;
+int compare_level;
 
 
 void setup()
@@ -15,14 +14,21 @@ void loop()
 {
     light_level = analogRead(light_sensor);
     Serial.printlnf("%d", light_level);  //This is to see on the serial monitor if the system is working as intended
+    compare_level = light_level - prev_level;
     
-    if ((light_level - prev_level) > 10)  //Sends a message when the detected light level is above the threshold
+    if (light_level > 20)  //Sends a message when the detected light level is above the threshold
     {
-        Particle.publish("Light_availability", "Sunny");
+        if ((compare_level * compare_level) > 50)
+        {
+            Particle.publish("Light_availability", "Sunny");
+        }
     }
-    else if ((light_level - prev_level) <= 10)  //Sends a message when the detected light level is below the threshold
+    else if (light_level <= 20)  //Sends a message when the detected light level is below the threshold
     {
-        Particle.publish("Light_availability", "Dark");
+        if ((compare_level * compare_level) > 50)
+        {
+            Particle.publish("Light_availability", "Dark");
+        }
     }
 
     prev_level = light_level;
