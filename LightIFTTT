@@ -1,3 +1,5 @@
+int light_sensor = A0;
+int light_level;
 int prev_level;
 int compare_level;
 
